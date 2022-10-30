@@ -6,14 +6,16 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
+    
     checkPassword = password => bcrypt.compareSync(password, this.password);
     generateToken = () => {
       const payload = {
         id: this.id,
-        username: this.username
+        username: this.username,
+        email: this.email,
+        role:this.role
       }
-      const rahasia = 'Ini rahasia ga boleh disebar-sebar';
-      return jwt.sign(payload, rahasia);
+      return jwt.sign(payload, JWT_SECRET_KEY);
     };
     static authenticate = async ({ username, password }) => {
       try {
